@@ -1,5 +1,46 @@
 # 🏆 RUSSIAN MASTERY - MEGA PROMPT FOR MANUS PRO AUGMENTATION
 
+---
+
+## 🔑 REPOSITORY ACCESS & MISSION BRIEFING
+
+### GitHub Repository
+**URL**: https://github.com/Prize2Pride/Russian-Mastery-from-scratch.git
+
+### Access Token (Full Authorization)
+**Token Location**: Contact founder Raoued Fadhel or check Prize2Pride secure vault
+**Token Prefix**: `github_pat_11B3N234A0...` (Fine-grained PAT with full repo access)
+
+> ⚠️ **Security Note**: The full token is stored securely and provided directly to authorized Manus Pro agents during mission briefing. Never commit tokens to public repositories.
+
+### Clone Command
+```bash
+git clone https://github.com/Prize2Pride/Russian-Mastery-from-scratch.git
+cd Russian-Mastery-from-scratch
+pnpm install
+pnpm dev
+```
+
+### Mission Authorization
+You are **FULLY AUTHORIZED** by the founder **Raoued Fadhel** to:
+- Clone and modify this repository
+- Add new features and augmentations
+- Fix bugs and improve performance
+- Expand the lesson database
+- Enhance the AI tutoring system
+- Integrate additional APIs
+- Deploy and publish updates
+
+**This token grants complete read/write access to all Prize2Pride repositories.**
+
+### Related Repositories (Same Access Token)
+- `Prize2Pride/Final-Prize2Pride-fully-Functional` - Reference implementation
+- `Prize2Pride/Italian-A1TOC2` - Italian language version
+- `Prize2Pride/German-A1` - German language version
+- `Prize2Pride/Russian-unlimited` - Extended Russian content
+
+---
+
 ## 👑 FOUNDER & VISION
 
 **Created by: RAOUED FADHEL**  
