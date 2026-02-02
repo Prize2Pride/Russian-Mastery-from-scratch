@@ -1,6 +1,7 @@
 import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
+import { toneRouter } from "./toneRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { z } from "zod";
 import { invokeLLM } from "./_core/llm";
@@ -76,6 +77,7 @@ Tu dois:
 
 export const appRouter = router({
   system: systemRouter,
+  tone: toneRouter,
   
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),

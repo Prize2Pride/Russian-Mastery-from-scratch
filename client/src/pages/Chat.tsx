@@ -148,6 +148,26 @@ export default function Chat() {
     }
   }, [isLoading, scrollToBottom]);
 
+  const [sessionId, setSessionId] = useState<number | undefined>();
+  
+  const sendMutation = trpc.chat.send.useMutation({
+    onSuccess: (data) => {
+      setSessionId(data.sessionId);
+      const assistantMsg: ChatMessage = {
+        id: `msg_${Date.now()}`,
+        role: 'assistant',
+        content: data.message,
+        tone: data.tone as any,
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, assistantMsg]);
+      setIsLoading(false);
+    },
+    onError: () => {
+      setIsLoading(false);
+    }
+  });
+
   const handleSend = async () => {
     if (!inputMessage.trim() || isLoading) return;
 
@@ -163,27 +183,11 @@ export default function Chat() {
     setInputMessage('');
     setIsLoading(true);
 
-    // Simulate AI response (will be replaced with actual API call)
-    setTimeout(() => {
-      const responses: Record<ToneLevel, string> = {
-        dirty: `**Réponse en mode vulgaire** 🔥\n\nD'accord, tu veux apprendre le russe de la rue! Voici quelques expressions:\n\n- **Блин** (Blin) - Merde! (version soft)\n- **Чёрт** (Chyort) - Putain!\n- **Фигня** (Fignya) - Conneries\n\n*⚠️ Note: Utilise ces expressions avec précaution! Ne les utilise jamais dans un contexte formel.*\n\n**Prononciation:**\n- Блин: "bleen"\n- Чёрт: "chyort"\n\nTu veux en apprendre d'autres? 😈`,
-        slang: `**Réponse en mode argot** 🗣️\n\nYo! Voici du slang russe moderne:\n\n- **Круто** (Kruto) - Trop cool!\n- **Чувак** (Chuvak) - Mec, gars\n- **Тусить** (Tusit') - Faire la fête\n- **Кайф** (Kayf) - Le pied, génial\n- **Чё?** (Cho?) - Quoi? (très familier)\n\n**Exemple de conversation:**\n> — Чувак, пойдём тусить?\n> — Круто! Кайф!\n\n*Les jeunes russes utilisent beaucoup ces mots!*`,
-        informal: `**Réponse en mode informel** 💬\n\nSalut! Voici comment on parle entre amis en russe:\n\n- **Привет!** (Privet!) - Salut!\n- **Как дела?** (Kak dela?) - Comment ça va?\n- **Всё хорошо** (Vsyo khorosho) - Tout va bien\n- **Пока!** (Poka!) - Salut! (au revoir)\n- **Давай!** (Davay!) - Allez! / OK!\n\n**Mini-dialogue:**\n> — Привет! Как дела?\n> — Привет! Всё хорошо, а у тебя?\n> — Тоже хорошо!\n\n*C'est le niveau de langue le plus courant au quotidien.*`,
-        formal: `**Réponse en mode formel** 👔\n\nBonjour. Voici les expressions formelles en russe:\n\n- **Здравствуйте** (Zdravstvuyte) - Bonjour (formel)\n- **Благодарю вас** (Blagodaryu vas) - Je vous remercie\n- **С уважением** (S uvazheniyem) - Cordialement\n- **Извините** (Izvinite) - Excusez-moi\n- **Пожалуйста** (Pozhaluysta) - S'il vous plaît\n\n**Pour un email professionnel:**\n> Уважаемый Иван Иванович,\n> Благодарю вас за ваше письмо...\n> С уважением,\n> [Votre nom]\n\n*Utilisez ces expressions dans un contexte professionnel.*`,
-        diplomatic: `**Réponse en mode diplomatique** 🎩\n\nExcellente question. Voici le langage diplomatique russe:\n\n- **Имею честь** (Imeyu chest') - J'ai l'honneur de...\n- **Позвольте выразить** (Pozvol'te vyrazit') - Permettez-moi d'exprimer...\n- **С глубоким уважением** (S glubokim uvazheniyem) - Avec le plus profond respect\n- **Ваше превосходительство** (Vashe prevoskhoditel'stvo) - Votre Excellence\n- **Соблаговолите принять** (Soblagovolite prinyat') - Veuillez agréer\n\n**Formule de clôture diplomatique:**\n> Примите, Ваше Превосходительство, уверения в моём глубочайшем уважении.\n\n*Ce niveau de langue est utilisé dans les cercles diplomatiques et officiels.*`
-      };
-
-      const assistantMsg: ChatMessage = {
-        id: `msg_${Date.now() + 1}`,
-        role: 'assistant',
-        content: responses[selectedTone],
-        tone: selectedTone,
-        timestamp: new Date()
-      };
-
-      setMessages(prev => [...prev, assistantMsg]);
-      setIsLoading(false);
-    }, 1500);
+    sendMutation.mutate({
+      message: inputMessage,
+      tone: selectedTone,
+      sessionId: sessionId
+    });
   };
 
   const handleQuickResponse = (response: string) => {

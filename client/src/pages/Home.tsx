@@ -16,6 +16,7 @@ import {
   Languages
 } from "lucide-react";
 import { Link } from "wouter";
+import { ToneTransformation } from "@/components/ToneTransformation";
 
 // Tone configuration for the 5 registers
 const TONE_CONFIG = {
@@ -136,6 +137,9 @@ export default function Home() {
               <div className="absolute bottom-12 left-12 w-1.5 h-1.5 bg-primary/70 rounded-full animate-pulse" />
               
               <div className="relative z-10 text-center">
+                <div className="absolute -top-4 -right-4 px-3 py-1 bg-green-500 text-white text-[10px] font-bold rounded-full animate-pulse flex items-center gap-1">
+                  <Zap className="w-3 h-3" /> OMEGA PROTOCOL ACTIVE
+                </div>
                 <motion.div
                   className="mb-4"
                   animate={{ y: [0, -5, 0] }}
@@ -181,6 +185,13 @@ export default function Home() {
                   <p className="text-sm text-primary/60 mt-2">
                     Transformer l'Éducation en une Expérience Inoubliable
                   </p>
+                  <div className="mt-4 flex items-center justify-center gap-2 text-[10px] text-primary/40 uppercase tracking-widest">
+                    <span>Extreme Protocols</span>
+                    <span className="w-1 h-1 bg-primary/40 rounded-full" />
+                    <span>GDPR Protected</span>
+                    <span className="w-1 h-1 bg-primary/40 rounded-full" />
+                    <span>Manus Augmented</span>
+                  </div>
                 </div>
               </div>
               
@@ -270,19 +281,40 @@ export default function Home() {
 
       {/* Tone Levels Section */}
       <section className="relative z-10 container py-20">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-4xl lg:text-5xl font-serif font-bold mb-4">
-            <span className="gold-text">5 Registres</span> de Langue
-          </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Maîtrisez toutes les nuances du russe, de l'argot au langage diplomatique
-          </p>
-        </motion.div>
+        <div className="grid lg:grid-cols-2 gap-12 items-start mb-16">
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="text-4xl lg:text-5xl font-serif font-bold mb-6">
+              <span className="gold-text">5 Registres</span> de Langue
+            </h2>
+            <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
+              Maîtrisez toutes les nuances du russe, de l'argot de rue au langage diplomatique. 
+              Notre IA transforme instantanément n'importe quelle phrase pour vous montrer 
+              comment l'adapter à chaque situation sociale.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="p-4 rounded-xl bg-primary/5 border border-primary/10">
+                <h4 className="font-bold gold-text mb-1">Immersion Totale</h4>
+                <p className="text-sm text-muted-foreground">Apprenez le vrai russe parlé, pas seulement celui des livres.</p>
+              </div>
+              <div className="p-4 rounded-xl bg-primary/5 border border-primary/10">
+                <h4 className="font-bold gold-text mb-1">Intelligence Culturelle</h4>
+                <p className="text-sm text-muted-foreground">Comprenez quand utiliser chaque ton pour éviter les gaffes.</p>
+              </div>
+            </div>
+          </motion.div>
+          
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <ToneTransformation />
+          </motion.div>
+        </div>
 
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           {Object.entries(TONE_CONFIG).map(([key, config], index) => (

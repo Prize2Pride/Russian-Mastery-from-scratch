@@ -25,7 +25,9 @@ import {
   Zap
 } from "lucide-react";
 import { Link } from "wouter";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { trpc } from "@/lib/trpc";
+import { toast } from "sonner";
 
 // Level configuration
 const LEVELS = [
@@ -90,39 +92,43 @@ export default function SongStudio() {
   const [selectedTone, setSelectedTone] = useState("slang");
   const [selectedStyle, setSelectedStyle] = useState("rap");
   const [topic, setTopic] = useState("");
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [generatedSongs, setGeneratedSongs] = useState(SAMPLE_SONGS);
   const [playingSong, setPlayingSong] = useState<number | null>(null);
-  const [dailySongsUsed, setDailySongsUsed] = useState(2);
-  const maxDailySongs = 10;
+
+  const utils = trpc.useUtils();
+  const { data: songs = [], isLoading: isSongsLoading } = trpc.songs.list.useQuery(undefined, {
+    enabled: isAuthenticated
+  });
+  const { data: dailyStats } = trpc.songs.dailyCount.useQuery(undefined, {
+    enabled: isAuthenticated
+  });
+
+  const generateMutation = trpc.songs.generate.useMutation({
+    onSuccess: () => {
+      toast.success("Chanson générée avec succès!");
+      setTopic("");
+      utils.songs.list.invalidate();
+      utils.songs.dailyCount.invalidate();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Erreur lors de la génération");
+    }
+  });
 
   const handleGenerate = async () => {
-    if (!topic.trim() || isGenerating || dailySongsUsed >= maxDailySongs) return;
-
-    setIsGenerating(true);
-
-    // Simulate song generation (will be replaced with actual Suno API call)
-    setTimeout(() => {
-      const newSong = {
-        id: Date.now(),
-        title: `Новая Песня о ${topic}`,
-        titleFr: `Nouvelle Chanson sur ${topic}`,
-        style: selectedStyle,
-        level: selectedLevel,
-        tone: selectedTone,
-        lyrics: `Это новая песня\nО теме: ${topic}\nНа уровне ${selectedLevel}\nВ стиле ${STYLES.find(s => s.id === selectedStyle)?.name}`,
-        lyricsFr: `C'est une nouvelle chanson\nSur le thème: ${topic}\nAu niveau ${selectedLevel}\nDans le style ${STYLES.find(s => s.id === selectedStyle)?.name}`,
-        status: "completed",
-        audioUrl: "#",
-        vocabulary: ["песня", "тема", "уровень", "стиль"]
-      };
-
-      setGeneratedSongs([newSong, ...generatedSongs]);
-      setDailySongsUsed(dailySongsUsed + 1);
-      setTopic("");
-      setIsGenerating(false);
-    }, 3000);
+    if (!topic.trim() || generateMutation.isPending) return;
+    
+    generateMutation.mutate({
+      topic,
+      level: selectedLevel as any,
+      tone: selectedTone as any,
+      style: selectedStyle as any
+    });
   };
+
+  const isGenerating = generateMutation.isPending;
+  const dailySongsUsed = dailyStats?.count || 0;
+  const maxDailySongs = dailyStats?.limit || 10;
+  const allSongs = songs.length > 0 ? songs : SAMPLE_SONGS;
 
   const togglePlay = (songId: number) => {
     setPlayingSong(playingSong === songId ? null : songId);
@@ -182,9 +188,9 @@ export default function SongStudio() {
                 <div>
                   <div className="flex justify-between text-sm mb-2">
                     <span className="text-muted-foreground">Limite quotidienne</span>
-                    <span className="text-primary">{maxDailySongs - dailySongsUsed} restantes</span>
+                    <span className="text-primary">{Math.max(0, maxDailySongs - dailySongsUsed)} restantes</span>
                   </div>
-                  <Progress value={(dailySongsUsed / maxDailySongs) * 100} className="h-2" />
+                  <Progress value={Math.min(100, (dailySongsUsed / maxDailySongs) * 100)} className="h-2" />
                 </div>
 
                 {/* Topic Input */}
@@ -286,20 +292,18 @@ export default function SongStudio() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="lg:col-span-2"
+            className="lg:col-span-2 space-y-6"
           >
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-serif font-bold">
-                Vos Chansons
-                <span className="text-muted-foreground text-lg ml-2">({generatedSongs.length})</span>
-              </h2>
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-serif font-bold gold-text">Vos Créations</h2>
+              <Badge variant="outline" className="border-primary/30 text-primary">
+                {allSongs.length} chansons
+              </Badge>
             </div>
 
-            <div className="space-y-4">
-              <AnimatePresence>
-                {generatedSongs.map((song, index) => (
-                  <motion.div
+            <div className="grid gap-6">
+              <AnimatePresence mode="popLayout">
+                {allSongs.map((song) => (           <motion.div
                     key={song.id}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
