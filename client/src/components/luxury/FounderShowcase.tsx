@@ -1,9 +1,3 @@
-/**
- * Prize2Pride Ultimate - Founder Showcase Component
- * "Augmenting the World Starts at Prize2Pride"
- * Raoued Fadhel - Gold & Diamond Display
- */
-
 import React from 'react';
 import { motion } from 'framer-motion';
 
@@ -13,66 +7,36 @@ interface FounderShowcaseProps {
   animated?: boolean;
 }
 
-export const FounderShowcase: React.FC<FounderShowcaseProps> = ({
-  variant = 'full',
+const DiamondIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-yellow-500">
+    <path d="M12 2L2 12L12 22L22 12L12 2Z" fill="currentColor" fillOpacity="0.3" stroke="currentColor" strokeWidth="2"/>
+    <path d="M12 6L6 12L12 18L18 12L12 6Z" fill="currentColor"/>
+  </svg>
+);
+
+const GoldDiamondText = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => (
+  <span className={`bg-gradient-to-r from-yellow-600 via-yellow-200 to-yellow-600 bg-clip-text text-transparent font-serif font-bold ${className}`}>
+    {children}
+  </span>
+);
+
+export const FounderShowcase: React.FC<FounderShowcaseProps> = ({ 
+  variant = 'full', 
   showMotto = true,
-  animated = true
+  animated = true 
 }) => {
   const containerVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
+    visible: { 
+      opacity: 1, 
       y: 0,
-      transition: { duration: 0.8, ease: "easeOut" }
+      transition: { duration: 0.8, staggerChildren: 0.2 }
     }
   };
-
-  const shimmerVariants = {
-    animate: {
-      backgroundPosition: ["200% 0%", "-200% 0%"],
-      transition: { duration: 3, repeat: Infinity, ease: "linear" }
-    }
-  };
-
-  const GoldDiamondText: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className = "" }) => (
-    <motion.span
-      className={`bg-gradient-to-r from-yellow-400 via-yellow-200 to-yellow-400 bg-clip-text text-transparent font-bold ${className}`}
-      style={{
-        backgroundSize: "200% 100%",
-        textShadow: "0 0 30px rgba(255, 215, 0, 0.5)"
-      }}
-      variants={animated ? shimmerVariants : undefined}
-      animate={animated ? "animate" : undefined}
-    >
-      {children}
-    </motion.span>
-  );
-
-  const DiamondIcon = () => (
-    <svg className="w-6 h-6 inline-block mx-1" viewBox="0 0 24 24" fill="none">
-      <path
-        d="M12 2L2 9L12 22L22 9L12 2Z"
-        fill="url(#diamond-gradient)"
-        stroke="url(#diamond-stroke)"
-        strokeWidth="1"
-      />
-      <defs>
-        <linearGradient id="diamond-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#E5E4E2" />
-          <stop offset="50%" stopColor="#FFFFFF" />
-          <stop offset="100%" stopColor="#E5E4E2" />
-        </linearGradient>
-        <linearGradient id="diamond-stroke" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#FFD700" />
-          <stop offset="100%" stopColor="#FFA500" />
-        </linearGradient>
-      </defs>
-    </svg>
-  );
 
   if (variant === 'badge') {
     return (
-      <motion.div
+      <motion.div 
         className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-yellow-900/30 to-yellow-700/30 border border-yellow-500/50"
         initial={animated ? "hidden" : undefined}
         animate={animated ? "visible" : undefined}
@@ -106,99 +70,104 @@ export const FounderShowcase: React.FC<FounderShowcaseProps> = ({
   // Full variant
   return (
     <motion.div
-      className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-8 border border-yellow-500/30"
+      className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-black via-gray-900 to-black p-10 border border-yellow-500/40 shadow-[0_0_50px_rgba(234,179,8,0.1)]"
       initial={animated ? "hidden" : undefined}
       animate={animated ? "visible" : undefined}
       variants={containerVariants}
     >
       {/* Background Effects */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-yellow-900/20 via-transparent to-transparent" />
-      <div className="absolute top-0 left-0 w-full h-full">
-        <div className="absolute top-4 left-4 w-2 h-2 bg-yellow-400 rounded-full animate-pulse" />
-        <div className="absolute top-8 right-8 w-1 h-1 bg-white rounded-full animate-ping" />
-        <div className="absolute bottom-12 left-12 w-1.5 h-1.5 bg-yellow-300 rounded-full animate-pulse" />
-        <div className="absolute bottom-4 right-4 w-2 h-2 bg-white/50 rounded-full animate-ping" style={{ animationDelay: '1s' }} />
-      </div>
-
-      {/* Content */}
-      <div className="relative z-10 text-center">
-        {/* Crown Icon */}
-        <motion.div
-          className="mb-4"
-          animate={{ y: [0, -5, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-yellow-900/20 via-transparent to-transparent" />
+      
+      <div className="relative z-10 flex flex-col lg:flex-row items-center gap-12">
+        {/* Founder Image Section */}
+        <motion.div 
+          className="relative group"
+          whileHover={{ scale: 1.02 }}
         >
-          <span className="text-4xl">👑</span>
+          <div className="absolute -inset-1 bg-gradient-to-r from-yellow-600 to-yellow-400 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+          <div className="relative w-64 h-80 rounded-2xl overflow-hidden border-2 border-yellow-500/50">
+            <img 
+              src="/images/founder.jpg" 
+              alt="Raoued Fadhel" 
+              className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+            <div className="absolute bottom-4 left-0 right-0 text-center">
+              <GoldDiamondText className="text-lg">THE VISIONARY</GoldDiamondText>
+            </div>
+          </div>
+          
+          {/* Hostess Avatars - Floating */}
+          <motion.div 
+            className="absolute -right-8 -top-8 w-24 h-24 rounded-full border-2 border-yellow-500/50 overflow-hidden shadow-xl"
+            animate={{ y: [0, -10, 0] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <img src="/images/hostess1.png" alt="Hostess" className="w-full h-full object-cover" />
+          </motion.div>
         </motion.div>
 
-        {/* Name with Diamonds */}
-        <div className="flex items-center justify-center gap-3 mb-4">
-          <DiamondIcon />
-          <DiamondIcon />
-          <GoldDiamondText className="text-4xl md:text-5xl tracking-widest">
-            RAOUED FADHEL
-          </GoldDiamondText>
-          <DiamondIcon />
-          <DiamondIcon />
-        </div>
-
-        {/* Title */}
-        <motion.p
-          className="text-xl text-yellow-400/90 font-light tracking-wide mb-6"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-        >
-          Founder & Visionary
-        </motion.p>
-
-        {/* Platform Badge */}
-        <motion.div
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-yellow-600/20 to-yellow-400/20 border border-yellow-500/40 mb-6"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <span className="text-yellow-400 font-semibold">Prize2Pride Ultimate</span>
-        </motion.div>
-
-        {/* Sub-platforms */}
-        <div className="flex flex-wrap justify-center gap-3 mb-6">
-          {['Fiction2Real', 'Purchase2Win', 'MLM-Prize2Pride'].map((platform, index) => (
-            <motion.span
-              key={platform}
-              className="px-4 py-1.5 rounded-full bg-gray-800/50 border border-yellow-500/20 text-yellow-300/80 text-sm"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.7 + index * 0.1 }}
-            >
-              {platform}
-            </motion.span>
-          ))}
-        </div>
-
-        {/* Motto */}
-        {showMotto && (
+        {/* Content Section */}
+        <div className="flex-1 text-center lg:text-left">
           <motion.div
-            className="mt-8 pt-6 border-t border-yellow-500/20"
+            className="mb-4 inline-block"
+            animate={{ y: [0, -5, 0] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <span className="text-5xl">👑</span>
+          </motion.div>
+
+          <div className="flex items-center justify-center lg:justify-start gap-3 mb-4">
+            <DiamondIcon />
+            <GoldDiamondText className="text-4xl md:text-6xl tracking-tighter">
+              RAOUED FADHEL
+            </GoldDiamondText>
+            <DiamondIcon />
+          </div>
+
+          <motion.p
+            className="text-2xl text-yellow-400/90 font-serif italic tracking-wide mb-8"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 1 }}
+            transition={{ delay: 0.5 }}
           >
-            <p className="text-lg text-gray-300 italic">
-              "Augmenting the World Starts at Prize2Pride"
-            </p>
-            <p className="text-sm text-yellow-500/60 mt-2">
-              Transforming Education into an Unforgettable Experience
-            </p>
-          </motion.div>
-        )}
+            Founder & Architect of the Singularity
+          </motion.p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+            <div className="p-4 rounded-xl bg-white/5 border border-yellow-500/20 backdrop-blur-sm">
+              <h4 className="text-yellow-500 font-bold mb-1">Prize2Pride Ultimate</h4>
+              <p className="text-gray-400 text-sm">The world's most advanced learning ecosystem.</p>
+            </div>
+            <div className="p-4 rounded-xl bg-white/5 border border-yellow-500/20 backdrop-blur-sm">
+              <h4 className="text-yellow-500 font-bold mb-1">Manus 2030 Fusion</h4>
+              <p className="text-gray-400 text-sm">Powered by 1 Billion Token Intelligence.</p>
+            </div>
+          </div>
+
+          {showMotto && (
+            <motion.div
+              className="pt-6 border-t border-yellow-500/20"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1 }}
+            >
+              <p className="text-xl text-gray-300 italic font-serif">
+                "Augmenting the World Starts at Prize2Pride"
+              </p>
+              <p className="text-sm text-yellow-500/60 mt-2 tracking-[0.2em] uppercase">
+                Transforming Education into an Unforgettable Experience
+              </p>
+            </motion.div>
+          )}
+        </div>
       </div>
 
       {/* Corner Decorations */}
-      <div className="absolute top-0 left-0 w-16 h-16 border-t-2 border-l-2 border-yellow-500/30 rounded-tl-2xl" />
-      <div className="absolute top-0 right-0 w-16 h-16 border-t-2 border-r-2 border-yellow-500/30 rounded-tr-2xl" />
-      <div className="absolute bottom-0 left-0 w-16 h-16 border-b-2 border-l-2 border-yellow-500/30 rounded-bl-2xl" />
-      <div className="absolute bottom-0 right-0 w-16 h-16 border-b-2 border-r-2 border-yellow-500/30 rounded-br-2xl" />
+      <div className="absolute top-0 left-0 w-24 h-24 border-t-2 border-l-2 border-yellow-500/30 rounded-tl-3xl" />
+      <div className="absolute top-0 right-0 w-24 h-24 border-t-2 border-r-2 border-yellow-500/30 rounded-tr-3xl" />
+      <div className="absolute bottom-0 left-0 w-24 h-24 border-b-2 border-l-2 border-yellow-500/30 rounded-bl-3xl" />
+      <div className="absolute bottom-0 right-0 w-24 h-24 border-b-2 border-r-2 border-yellow-500/30 rounded-br-3xl" />
     </motion.div>
   );
 };
